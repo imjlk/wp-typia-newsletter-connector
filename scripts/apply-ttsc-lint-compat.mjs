@@ -49,6 +49,10 @@ const patchedParentGuard = `    switch node.Parent.Kind {
     }`;
 const bufferTargetPattern =
 	/let target(?:: ([^=\r\n]+))? = Buffer\.alloc\(0\);(?=\r?\n\s*if \(entry\.isSymbolicLink\(\)\))/gu;
+const unpatchedBufferTarget = 'let target = Buffer.alloc(0);';
+const typedBufferTarget = 'let target: Buffer = Buffer.alloc(0);';
+const runtimeBufferTarget =
+	'/** @type {Buffer} */ let target = Buffer.alloc(0);';
 
 function countOccurrences( source, needle ) {
 	let count = 0;
@@ -104,7 +108,15 @@ function prepareSourcePatches( { description, replacements, sourcePath } ) {
 	);
 }
 
-function prepareBufferTargetRepair( sourcePath, functionNames, scopeMarker ) {
+function prepareBufferTargetRepair(
+	sourcePath,
+	functionNames,
+	{
+		legacyTargets = [],
+		patchedTarget = typedBufferTarget,
+		scopeMarker,
+	} = {}
+) {
 	const source = fs.readFileSync( sourcePath, 'utf8' );
 	let nextSource = source;
 	const searchStart =
@@ -141,27 +153,56 @@ function prepareBufferTargetRepair( sourcePath, functionNames, scopeMarker ) {
 				`Refusing to apply the Node Buffer generic compatibility repair: incoherent function boundary for '${ functionName }' at ${ sourcePath }.`
 			);
 		}
-		const matches = [ ...functionSource.matchAll( bufferTargetPattern ) ];
-		if ( matches.length !== 2 ) {
-			throw new Error(
-				`Refusing to apply the Node Buffer generic compatibility repair: expected 2 Buffer.alloc(0) allocations in '${ functionName }()', found ${ matches.length } at ${ sourcePath }.`
-			);
-		}
-		for ( const match of matches ) {
-			const annotation = match[ 1 ]?.trim();
-			if (
-				annotation !== undefined &&
-				! /^Buffer(?:<.+>)?$/u.test( annotation )
-			) {
+		// Strip the most specific declarations first: the runtime JSDoc form
+		// contains the plain declaration as a literal suffix.
+		let unmatchedSource = functionSource;
+		const patchedCount = countOccurrences(
+			unmatchedSource,
+			patchedTarget
+		);
+		unmatchedSource = unmatchedSource.replaceAll( patchedTarget, '' );
+		const legacyStates = legacyTargets.map( ( target ) => {
+			const count = countOccurrences( unmatchedSource, target );
+			unmatchedSource = unmatchedSource.replaceAll( target, '' );
+			return { count, target };
+		} );
+		const unpatchedCount = countOccurrences(
+			unmatchedSource,
+			unpatchedBufferTarget
+		);
+		const activeStates = [
+			{ count: patchedCount, target: patchedTarget },
+			...legacyStates,
+			{ count: unpatchedCount, target: unpatchedBufferTarget },
+		].filter( ( state ) => state.count !== 0 );
+		if (
+			activeStates.length !== 1 ||
+			activeStates[ 0 ].count !== 2
+		) {
+			const unexpectedAnnotation = [
+				...functionSource.matchAll( bufferTargetPattern ),
+			]
+				.map( ( match ) => match[ 1 ]?.trim() )
+				.find(
+					( annotation ) =>
+						annotation !== undefined &&
+						! /^Buffer(?:<.+>)?$/u.test( annotation )
+				);
+			if ( unexpectedAnnotation !== undefined ) {
 				throw new Error(
-					`Refusing to apply the Node Buffer generic compatibility repair: unexpected type annotation '${ annotation }' in '${ functionName }()' at ${ sourcePath }.`
+					`Refusing to apply the Node Buffer generic compatibility repair: unexpected type annotation '${ unexpectedAnnotation }' in '${ functionName }()' at ${ sourcePath }.`
 				);
 			}
+			throw new Error(
+				`Refusing to apply the Node Buffer generic compatibility repair: expected 2 consistent target declarations in '${ functionName }()' at ${ sourcePath }.`
+			);
 		}
-		functionSource = functionSource.replace(
-			bufferTargetPattern,
-			() => 'let target: Buffer = Buffer.alloc(0);'
-		);
+		if ( activeStates[ 0 ].target !== patchedTarget ) {
+			functionSource = functionSource.replaceAll(
+				activeStates[ 0 ].target,
+				patchedTarget
+			);
+		}
 		nextSource = `${ nextSource.slice(
 			0,
 			functionStart
@@ -214,11 +255,14 @@ function prepareRepairs() {
 			'directoryDigest',
 			'configDirectoryDigest',
 		] ),
-		prepareBufferTargetRepair( lintRuntimePath, [ 'directoryDigest' ] ),
+		prepareBufferTargetRepair( lintRuntimePath, [ 'directoryDigest' ], {
+			legacyTargets: [ typedBufferTarget ],
+			patchedTarget: runtimeBufferTarget,
+		} ),
 		prepareBufferTargetRepair(
 			lintHostConfigPath,
 			[ 'directoryDigest' ],
-			'func typeScriptConfigLoaderSource('
+			{ scopeMarker: 'func typeScriptConfigLoaderSource(' }
 		),
 	];
 }
@@ -226,10 +270,10 @@ function prepareRepairs() {
 try {
 	const repairs = prepareRepairs();
 	for ( const { nextSource, originalSource, sourcePath } of repairs ) {
+		removeStaleTemporaryFiles( sourcePath );
 		if ( originalSource === nextSource ) {
 			continue;
 		}
-		removeStaleTemporaryFiles( sourcePath );
 		const temporaryPath = `${ sourcePath }.wp-typia-${ process.pid }.tmp`;
 		try {
 			fs.writeFileSync( temporaryPath, nextSource, {

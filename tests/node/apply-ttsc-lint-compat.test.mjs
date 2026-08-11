@@ -88,17 +88,17 @@ function populateFixture( fixtureRoot ) {
 	for ( const relativePath of bufferPaths ) {
 		const sourcePath = path.join( packageRoot, relativePath );
 		const source = fs.readFileSync( sourcePath, 'utf8' );
-		assert.equal(
-			source.includes( 'let target: Buffer = Buffer.alloc(0);' ),
-			true
-		);
-		fs.writeFileSync(
-			sourcePath,
-			source.replaceAll(
+		const unpatchedSource = source
+			.replaceAll(
 				'let target: Buffer = Buffer.alloc(0);',
 				'let target = Buffer.alloc(0);'
 			)
-		);
+			.replaceAll(
+				'/** @type {Buffer} */ let target = Buffer.alloc(0);',
+				'let target = Buffer.alloc(0);'
+			);
+		assert.notEqual( unpatchedSource, source );
+		fs.writeFileSync( sourcePath, unpatchedSource );
 	}
 	return { fixtureRoot, packageRoot, rulePath };
 }
@@ -106,6 +106,13 @@ function populateFixture( fixtureRoot ) {
 function runCompatibilityScript( fixtureRoot ) {
 	return spawnSync( process.execPath, [ compatibilityScriptPath ], {
 		cwd: fixtureRoot,
+		encoding: 'utf8',
+		timeout: 30_000,
+	} );
+}
+
+function runNodeSyntaxCheck( sourcePath ) {
+	return spawnSync( process.execPath, [ '--check', sourcePath ], {
 		encoding: 'utf8',
 		timeout: 30_000,
 	} );
@@ -160,9 +167,27 @@ test( 'compatibility repairs are recoverable and idempotent', ( t ) => {
 		),
 		true
 	);
+	const runtimePath = path.join( packageRoot, 'lib', 'index.js' );
+	const patchedRuntime = fs.readFileSync( runtimePath, 'utf8' );
+	assert.equal(
+		patchedRuntime.includes(
+			'/** @type {Buffer} */ let target = Buffer.alloc(0);'
+		),
+		true
+	);
+	assert.equal(
+		patchedRuntime.includes( 'let target: Buffer = Buffer.alloc(0);' ),
+		false
+	);
+	assertSuccessfulRun( runNodeSyntaxCheck( runtimePath ) );
+
+	const postRepairStalePath = `${ indexPath }.wp-typia-24680.tmp`;
+	fs.writeFileSync( postRepairStalePath, 'stale after repair' );
+	fs.utimesSync( postRepairStalePath, staleTime, staleTime );
 
 	const secondRun = runCompatibilityScript( fixtureRoot );
 	assertSuccessfulRun( secondRun );
+	assert.equal( fs.existsSync( postRepairStalePath ), false );
 	assert.equal( fs.readFileSync( indexPath, 'utf8' ), firstPatchedIndex );
 } );
 
