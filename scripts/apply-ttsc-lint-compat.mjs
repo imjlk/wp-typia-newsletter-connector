@@ -5,7 +5,18 @@ import path from 'node:path';
 const REQUIRED_VERSION = '0.26.2';
 const STALE_TEMPORARY_FILE_AGE_MS = 60 * 60 * 1000;
 const require = createRequire( path.join( process.cwd(), 'package.json' ) );
-const manifestPath = require.resolve( '@ttsc/lint/package.json' );
+let manifestPath;
+try {
+	manifestPath = require.resolve( '@ttsc/lint/package.json' );
+} catch ( error ) {
+	if ( error?.code === 'MODULE_NOT_FOUND' ) {
+		console.log(
+			'@ttsc/lint is not installed; skipping development-only compatibility repairs.'
+		);
+		process.exit( 0 );
+	}
+	throw error;
+}
 const manifest = JSON.parse( fs.readFileSync( manifestPath, 'utf8' ) );
 
 if ( manifest.version !== REQUIRED_VERSION ) {

@@ -221,3 +221,18 @@ test( 'unexpected Buffer annotations fail with recovery guidance', ( t ) => {
 	);
 	assert.match( result.stderr, /Re-run pnpm install/u );
 } );
+
+test( 'production-only installs skip an absent lint dependency', ( t ) => {
+	const fixtureRoot = fs.mkdtempSync(
+		path.join( os.tmpdir(), 'ttsc-lint-compat-production-' )
+	);
+	t.after( () => fs.rmSync( fixtureRoot, { force: true, recursive: true } ) );
+	fs.writeFileSync( path.join( fixtureRoot, 'package.json' ), '{}\n' );
+
+	const result = runCompatibilityScript( fixtureRoot );
+	assertSuccessfulRun( result );
+	assert.match(
+		result.stdout,
+		/@ttsc\/lint is not installed; skipping development-only compatibility repairs/u
+	);
+} );
