@@ -373,7 +373,7 @@ async function prepareEditorUi( page: Page ) {
 
 	await page.evaluate( () => {
 		window.wp?.data
-			?.dispatch( 'core/edit-post' )
+			?.dispatch?.( 'core/edit-post' )
 			?.openGeneralSidebar?.( 'edit-post/document' );
 	} );
 	await dismissLayoutModal( page );
@@ -567,9 +567,10 @@ declare global {
 	interface Window {
 		wp?: {
 			data?: {
-				dispatch: ( storeName: string ) => {
+				dispatch?: ( storeName: string ) => {
 					openGeneralSidebar?: ( name: string ) => void;
 				};
+				select?: ( storeName: string ) => unknown;
 			};
 		};
 	}

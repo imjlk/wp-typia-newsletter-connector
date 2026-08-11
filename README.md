@@ -91,8 +91,7 @@ The connector also registers Newspack editor provider routes under
 ```bash
 pnpm run sync
 pnpm run test:php
-pnpm run typecheck
-pnpm run lint
+pnpm run check
 pnpm run build
 pnpm run changeset:add
 pnpm run release:check-version
@@ -136,7 +135,7 @@ Local Listmonk runs at `http://localhost:9000`, with a dedicated Mailpit UI at
 `.listmonk.env` file. See
 [docs/INTEGRATION-TESTING.md](docs/INTEGRATION-TESTING.md) for the full flow.
 
-Use `pnpm run doctor:wp-typia` to verify the `wp-typia@0.25.0` workspace
+Use `pnpm run doctor:wp-typia` to verify the `wp-typia@0.28.0` workspace
 diagnostics. The wrapper accepts the documented Bun-only readiness failure in
 Node fallback mode while still failing on workspace drift. See
 [docs/WP-TYPIA-DOCTOR.md](docs/WP-TYPIA-DOCTOR.md).
