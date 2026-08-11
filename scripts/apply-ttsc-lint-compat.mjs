@@ -51,7 +51,7 @@ const bufferTargetPattern =
 	/let target(?:: ([^=\r\n]+))? = Buffer\.alloc\(0\);(?=\r?\n\s*if \(entry\.isSymbolicLink\(\)\))/gu;
 const unpatchedBufferTarget = 'let target = Buffer.alloc(0);';
 const typedBufferTarget = 'let target: Buffer = Buffer.alloc(0);';
-const runtimeBufferTarget =
+const legacyJSDocBufferTarget =
 	'/** @type {Buffer} */ let target = Buffer.alloc(0);';
 
 function countOccurrences( source, needle ) {
@@ -256,8 +256,11 @@ function prepareRepairs() {
 			'configDirectoryDigest',
 		] ),
 		prepareBufferTargetRepair( lintRuntimePath, [ 'directoryDigest' ], {
-			legacyTargets: [ typedBufferTarget ],
-			patchedTarget: runtimeBufferTarget,
+			// This function is TypeScript source embedded in a JavaScript template
+			// literal. Its explicit type is required when ttsx evaluates the string,
+			// while node --check remains authoritative for the container file.
+			legacyTargets: [ legacyJSDocBufferTarget ],
+			scopeMarker: 'exports.TTSX_EXTRACTOR_SCRIPT = `',
 		} ),
 		prepareBufferTargetRepair(
 			lintHostConfigPath,

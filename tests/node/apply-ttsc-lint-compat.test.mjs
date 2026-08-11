@@ -170,15 +170,19 @@ test( 'compatibility repairs are recoverable and idempotent', ( t ) => {
 	const runtimePath = path.join( packageRoot, 'lib', 'index.js' );
 	const patchedRuntime = fs.readFileSync( runtimePath, 'utf8' );
 	assert.equal(
+		patchedRuntime.match( /let target: Buffer = Buffer\.alloc\(0\);/gu )
+			?.length,
+		2,
+		'The embedded ttsx extractor must retain explicit Buffer types.'
+	);
+	assert.equal(
 		patchedRuntime.includes(
 			'/** @type {Buffer} */ let target = Buffer.alloc(0);'
 		),
-		true
-	);
-	assert.equal(
-		patchedRuntime.includes( 'let target: Buffer = Buffer.alloc(0);' ),
 		false
 	);
+	// The typed declarations above are inside a template literal, not executable
+	// syntax in lib/index.js. Guard both halves of that boundary.
 	assertSuccessfulRun( runNodeSyntaxCheck( runtimePath ) );
 
 	const postRepairStalePath = `${ indexPath }.wp-typia-24680.tmp`;
