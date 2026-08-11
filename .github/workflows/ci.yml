@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Opt in during GitHub's documented Node 20 to Node 24 action migration.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  quality:
+    name: Code quality and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
+        with:
+          # pnpm 8 supports Node 24 and preserves this repository's v6 lockfile.
+          version: 8.15.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Configure ttsc source-plugin cache
+        shell: bash
+        run: |
+          echo "TTSC_CACHE_DIR=$GITHUB_WORKSPACE/.ttsc-cache" >> "$GITHUB_ENV"
+          echo "TTSC_GO_CACHE_DIR=$RUNNER_TEMP/ttsc-go-cache" >> "$GITHUB_ENV"
+
+      - name: Cache ttsc source plugins
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            .ttsc-cache/plugins
+            ${{ runner.temp }}/ttsc-go-cache
+          key: ttsc-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml', 'lint.config*.mts', 'scripts/apply-ttsc-lint-compat.mjs') }}
+          restore-keys: |
+            ttsc-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check code and styles
+        run: pnpm run check
+
+      - name: Test Node.js tooling
+        run: pnpm run test:node
+
+      - name: Build plugin assets
+        run: pnpm run build

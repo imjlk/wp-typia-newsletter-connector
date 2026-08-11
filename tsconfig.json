@@ -13,9 +13,18 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": true,
+		"allowJs": true,
 		"paths": { "*": [ "./*" ] },
 		"types": [ "node", "wordpress__block-editor", "wordpress__blocks" ]
 	},
-	"include": [ "src/**/*", "scripts/**/*" ],
+	"include": [
+		"src/**/*",
+		"scripts/**/*",
+		"tests/**/*",
+		"*.js",
+		"*.jsx",
+		"*.cjs",
+		"*.mjs"
+	],
 	"exclude": [ "node_modules", "build" ]
 }

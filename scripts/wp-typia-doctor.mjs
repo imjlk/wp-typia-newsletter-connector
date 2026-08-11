@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import { spawnSync } from 'node:child_process';
 
-const WP_TYPIA_VERSION = '0.27.0';
+const WP_TYPIA_VERSION = '0.28.0';
 const PLUGIN_FILE = 'wp-typia-newsletter-connector.php';
 const REST_RESOURCE_FILES = [
 	'listmonk-settings.php',

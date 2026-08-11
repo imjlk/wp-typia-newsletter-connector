@@ -63,7 +63,6 @@ function getWpScriptsBin() {
 
 function main() {
 	const mode = process.argv[ 2 ] ?? 'build';
-	const passthroughArgs = process.argv.slice( 3 );
 	if ( mode !== 'build' && mode !== 'start' ) {
 		throw new Error( `Unknown workspace build mode: ${ mode }` );
 	}
@@ -80,6 +79,7 @@ function main() {
 		return;
 	}
 
+	const passthroughArgs = process.argv.slice( 3 );
 	execFileSync(
 		getWpScriptsBin(),
 		[ mode, '--experimental-modules', '--blocks-manifest', ...passthroughArgs ],

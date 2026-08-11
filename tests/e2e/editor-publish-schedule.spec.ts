@@ -357,7 +357,7 @@ async function prepareEditorUi( page: Page ) {
 
 	await page.evaluate( () => {
 		window.wp?.data
-			?.dispatch( 'core/edit-post' )
+			?.dispatch?.( 'core/edit-post' )
 			?.openGeneralSidebar?.( 'edit-post/document' );
 	} );
 	await dismissLayoutModal( page );
