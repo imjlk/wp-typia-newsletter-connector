@@ -3,6 +3,12 @@
 All notable changes to this plugin are documented in this file. Release entries
 are generated from Sampo changesets.
 
+## 0.1.2 — 2026-08-14
+
+### Changed
+
+- [e0f7b9d](https://github.com/imjlk/wp-typia-newsletter-connector/commit/e0f7b9decf1b529a2cebfbe12ef5152e59f145cc) Rename the plugin for trademark-safe WordPress.org review and verify compatibility with WordPress 7.1, including its enforced iframed editor and updated form controls. — Thanks @imjlk!
+
 ## 0.1.1 — 2026-08-07
 
 ### Fixed

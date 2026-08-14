@@ -4,7 +4,7 @@ Tags: newsletter, newspack, listmonk, email, campaigns
 Requires at least: 6.7
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,9 @@ Suggested privacy-policy text is available at
 https://github.com/imjlk/wp-typia-newsletter-connector/blob/main/docs/PRIVACY.md.
 
 == Changelog ==
+
+= 0.1.2 =
+* Changed: [e0f7b9d](https://github.com/imjlk/wp-typia-newsletter-connector/commit/e0f7b9decf1b529a2cebfbe12ef5152e59f145cc) Rename the plugin for trademark-safe WordPress.org review and verify compatibility with WordPress 7.1, including its enforced iframed editor and updated form controls. — Thanks @imjlk!
 
 = 0.1.1 =
 * Fixed: Replace dynamic PHP include paths with explicit local resource loading, remove development documentation from the WordPress.org package, and update the WPTypia tooling used to validate generated contracts.
