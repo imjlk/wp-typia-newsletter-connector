@@ -97,6 +97,7 @@ const requiredRestSchemaFiles = restSchemaResources.flatMap((resource) => {
 });
 
 const forbiddenZipPatterns = [
+	new RegExp(`^${escapedPluginSlug}/(?:.*/)?\\.DS_Store$`),
 	new RegExp(`^${escapedPluginSlug}/node_modules/`),
 	new RegExp(`^${escapedPluginSlug}/vendor/`),
 	new RegExp(`^${escapedPluginSlug}/src/`),
@@ -193,7 +194,10 @@ function copyRuntimeFiles() {
 		}
 
 		fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-		fs.cpSync(sourcePath, targetPath, { recursive: true });
+		fs.cpSync(sourcePath, targetPath, {
+			recursive: true,
+			filter: (candidatePath) => path.basename(candidatePath) !== '.DS_Store',
+		});
 	}
 }
 
