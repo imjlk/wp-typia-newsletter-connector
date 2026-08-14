@@ -1,4 +1,4 @@
-# WPTypia Connector for Newspack Newsletters with Listmonk Backlog
+# WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk Backlog
 
 Last updated: 2026-07-30
 

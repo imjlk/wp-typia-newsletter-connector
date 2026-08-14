@@ -203,6 +203,12 @@ test.describe( 'Listmonk settings screen', () => {
 	} ) => {
 		await loginAsAdmin( page );
 		await page.goto( fixture.settingsPath );
+		await expect(
+			page.getByRole( 'heading', {
+				level: 1,
+				name: 'WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk',
+			} )
+		).toBeVisible();
 
 		const settings = page.locator(
 			'.wp-typia-newsletter-connector-settings'

@@ -127,7 +127,7 @@ function newspack_listmonk_connector_render_settings_page() {
 	}
 	?>
 	<div class="wrap">
-		<h1><?php esc_html_e( 'Newspack Listmonk Connector', 'wp-typia-newsletter-connector' ); ?></h1>
+		<h1><?php esc_html_e( 'WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk', 'wp-typia-newsletter-connector' ); ?></h1>
 		<?php settings_errors( 'newspack_listmonk_connector' ); ?>
 		<div id="wp-typia-newsletter-connector-settings-root">
 			<p><?php esc_html_e( 'Loading Listmonk settings...', 'wp-typia-newsletter-connector' ); ?></p>

@@ -8,7 +8,8 @@ globalScope.__wpTypiaCollections ??= {};
 
 if ( ! globalScope.__wpTypiaCollections[ 'wp-typia-newsletter-connector' ] ) {
 	registerBlockCollection( 'wp-typia-newsletter-connector', {
-		title: 'Newspack Listmonk Connector',
+		title:
+			'WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk',
 	} );
 	globalScope.__wpTypiaCollections[ 'wp-typia-newsletter-connector' ] = true;
 }

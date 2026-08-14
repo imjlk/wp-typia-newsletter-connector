@@ -1,6 +1,26 @@
 # Compatibility Notes
 
-Last verified: 2026-05-11
+Last verified: 2026-08-14
+
+## WordPress
+
+Verified against WordPress 7.1 RC2 with `WP_DEBUG` and `SCRIPT_DEBUG` enabled.
+
+- The Newspack newsletter post editor renders its content canvas in
+  `iframe[name="editor-canvas"]`, while the connector's document settings panel
+  remains available in the editor shell.
+- Preview, campaign sync, test sends, immediate publishing, scheduled
+  publishing, analytics, and the settings screen pass their Playwright flows.
+- The settings UI uses the WordPress 7.1 default 40px form controls without the
+  removed `__next40pxDefaultSize` compatibility prop.
+- The PHP suite passes 87 tests and 538 assertions on PHP 8.3.
+- Plugin Check 2.0.0 reports no findings after excluding only the expected
+  `trademarked_term` warning for the WordPress.org-assigned plugin slug.
+
+The connector does not use client-side media processing hooks, jQuery UI,
+Admin Bar nodes, the removed `Navigation` component, Emotion styling APIs, the
+SVG Icon API, or the Abilities API, so the corresponding WordPress 7.1 changes
+do not require runtime compatibility shims.
 
 ## Newspack Newsletters
 

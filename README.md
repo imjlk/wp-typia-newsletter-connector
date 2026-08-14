@@ -1,4 +1,4 @@
-# WPTypia Connector for Newspack Newsletters with Listmonk
+# WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk
 
 Newspack Newsletters companion ESP provider for Listmonk campaign delivery.
 

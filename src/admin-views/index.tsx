@@ -251,7 +251,6 @@ function SettingsApp() {
 				<div className="wp-typia-newsletter-connector-settings__form">
 					<TextControl
 						__nextHasNoMarginBottom
-						__next40pxDefaultSize
 						label={ __(
 							'Listmonk API URL',
 							'wp-typia-newsletter-connector'
@@ -263,7 +262,6 @@ function SettingsApp() {
 					/>
 					<TextControl
 						__nextHasNoMarginBottom
-						__next40pxDefaultSize
 						autoComplete="off"
 						label={ __(
 							'API user',
@@ -274,7 +272,6 @@ function SettingsApp() {
 					/>
 					<TextControl
 						__nextHasNoMarginBottom
-						__next40pxDefaultSize
 						autoComplete="new-password"
 						help={ tokenHelp }
 						label={ __(
@@ -287,7 +284,6 @@ function SettingsApp() {
 					/>
 					<TextControl
 						__nextHasNoMarginBottom
-						__next40pxDefaultSize
 						label={ __(
 							'Default From email',
 							'wp-typia-newsletter-connector'
@@ -298,7 +294,6 @@ function SettingsApp() {
 					/>
 					<TextControl
 						__nextHasNoMarginBottom
-						__next40pxDefaultSize
 						label={ __(
 							'Default template ID',
 							'wp-typia-newsletter-connector'
@@ -310,7 +305,6 @@ function SettingsApp() {
 					/>
 					<TextControl
 						__nextHasNoMarginBottom
-						__next40pxDefaultSize
 						help={ __(
 							'Separate multiple Listmonk list IDs with commas.',
 							'wp-typia-newsletter-connector'

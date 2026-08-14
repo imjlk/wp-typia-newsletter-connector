@@ -1,4 +1,4 @@
-# WPTypia Connector for Newspack Newsletters with Listmonk Setup
+# WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk Setup
 
 This guide is for beta validation on a staging WordPress site.
 
@@ -74,7 +74,7 @@ required consent.
 
 1. In WordPress admin, install and activate Newspack Newsletters.
 2. Upload `artifacts/wp-typia-newsletter-connector-<version>.zip`.
-3. Activate WPTypia Connector for Newspack Newsletters with Listmonk.
+3. Activate WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk.
 4. Open Settings > Newsletter Connector.
 5. Enter:
    - Listmonk API URL over HTTPS, for example `https://listmonk.example.com`.

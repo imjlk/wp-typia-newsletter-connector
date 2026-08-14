@@ -1,8 +1,8 @@
-=== Newspack Listmonk Connector ===
+=== WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk ===
 Contributors: imjlk
 Tags: newsletter, newspack, listmonk, email, campaigns
 Requires at least: 6.7
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.0
 Stable tag: 0.1.1
 License: GPL-2.0-or-later
@@ -12,7 +12,7 @@ Companion ESP provider for sending Newspack Newsletters campaigns with Listmonk.
 
 == Description ==
 
-Newspack Listmonk Connector is a companion plugin for Newspack Newsletters that adds a Listmonk ESP provider.
+WPTypia Email Service Provider Connector for Newspack Newsletters with Listmonk is a companion plugin for Newspack Newsletters that adds a Listmonk ESP provider.
 It turns Newspack newsletter editor output into raw HTML Listmonk campaigns, then
 supports draft sync, test sends, immediate sends, and scheduled sends.
 

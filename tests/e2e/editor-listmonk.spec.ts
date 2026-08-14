@@ -422,6 +422,9 @@ test.describe( 'Listmonk editor panel', () => {
 		await loginAsAdmin( page );
 		await page.goto( fixture.editPath );
 		await prepareEditorUi( page );
+		await expect(
+			page.locator( 'iframe[name="editor-canvas"]' )
+		).toBeVisible();
 
 		const panel = page.locator( '.wp-typia-newsletter-connector-panel' );
 		await expect( panel ).toBeVisible();
