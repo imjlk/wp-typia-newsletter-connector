@@ -3,6 +3,12 @@
 All notable changes to this plugin are documented in this file. Release entries
 are generated from Sampo changesets.
 
+## 1.0.0 — 2026-08-22
+
+### Changed
+
+- [5fd2f76](https://github.com/imjlk/wp-typia-newsletter-connector/commit/5fd2f76269d3830cef41c08891180ede205fc098) Promote the connector to its first stable WordPress.org release with WordPress 7.1 compatibility, verified Newspack Newsletters and Listmonk workflows, and complete directory artwork. — Thanks imjlk!
+
 ## 0.1.2 — 2026-08-14
 
 ### Changed

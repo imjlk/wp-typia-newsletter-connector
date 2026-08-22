@@ -1,6 +1,6 @@
 {
 	"name": "imjlk/wp-typia-newsletter-connector",
-	"version": "0.1.2",
+	"version": "1.0.0",
 	"description": "Newspack Newsletters ESP provider for Listmonk campaigns.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
