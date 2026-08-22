@@ -1,4 +1,5 @@
 {
+	"core": "https://downloads.wordpress.org/release/wordpress-7.1.zip",
 	"plugins": [
 		"https://downloads.wordpress.org/plugin/newspack-newsletters.zip"
 	],

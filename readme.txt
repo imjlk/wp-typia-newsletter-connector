@@ -65,6 +65,12 @@ or the Listmonk project.
 Detailed setup and validation documentation is available at
 https://github.com/imjlk/wp-typia-newsletter-connector/blob/main/docs/SETUP.md.
 
+== Screenshots ==
+
+1. Configure the Listmonk API connection, sender defaults, template, and target list IDs from the WordPress settings screen.
+2. Compose a newsletter in the WordPress 7.1 iframed editor while reviewing the connected Listmonk campaign status and analytics.
+3. Select a Listmonk audience, sync the campaign, send a test email, and inspect the generated HTML and payload without leaving the editor.
+
 == Privacy and Uninstall ==
 
 The Listmonk API URL, API user, API token, default From email, template ID, and
